@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copy this file to config.php (same folder) and fill in real values.
+ * config.php is git-ignored and denied by .htaccess. Never commit it.
+ *
+ * Generate ADMIN_PASSWORD_HASH on your own machine:
+ *   php -r 'echo password_hash("your-password", PASSWORD_DEFAULT), PHP_EOL;'
+ */
+return [
+    // Public site address, no trailing slash. Used for canonical and OG URLs.
+    'SITE_URL' => 'https://example.com',
+
+    // Object storage / CDN that hosts the encoded videos and posters, no trailing slash.
+    // Relative media paths stored in the DB are resolved against this.
+    'CDN_BASE_URL' => 'https://cdn.example.com',
+
+    // Output of password_hash(). Placeholder below never verifies.
+    'ADMIN_PASSWORD_HASH' => 'REPLACE_WITH_PASSWORD_HASH',
+
+    // Sticky call-to-action button.
+    'CTA_URL' => 'https://example.com/contact',
+    'CTA_LABEL' => 'سفارش پروژه',
+
+    'SITE_NAME' => 'آژانس خلاقیت آواجار',
+
+    // SQLite file. Must stay outside public/ and be writable by PHP (folder too).
+    'DB_PATH' => __DIR__ . '/data/avajar.sqlite',
+];

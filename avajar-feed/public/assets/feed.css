@@ -1,0 +1,227 @@
+:root {
+  --cta-h: 52px;
+  --gap: 16px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --accent: #ffcc00;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  color: #fff;
+  font-family: Vazirmatn, Vazir, "IRANSansX", IRANSans, Shabnam, Sahel, Tahoma, "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  line-height: 1.8;
+  -webkit-text-size-adjust: 100%;
+}
+
+body { overflow: hidden; }
+
+a { color: inherit; }
+
+/* Brand bar */
+.brand {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 3;
+  padding: calc(var(--safe-t) + 10px) var(--gap) 10px;
+  pointer-events: none;
+  background: linear-gradient(rgba(0, 0, 0, .55), transparent);
+}
+.brand__name {
+  pointer-events: auto;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .6);
+}
+
+/* Feed */
+.feed {
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.feed::-webkit-scrollbar { display: none; }
+
+.feed__empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  margin: 0;
+}
+
+/* One reel */
+.reel {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  contain: layout paint;
+}
+
+.reel__media {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  background: #111;
+  cursor: pointer;
+}
+
+.reel__poster,
+.reel__video,
+.reel__fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.reel__poster {
+  z-index: 1;
+  transition: opacity .2s;
+}
+.reel.is-playing .reel__poster { opacity: 0; }
+.reel__fallback { z-index: 2; }
+
+/* Play overlay (poster-only mode / autoplay blocked) */
+.reel__play {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  margin: auto;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .55);
+  pointer-events: none;
+}
+.reel__play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 14px 0 14px 24px;
+  border-color: transparent transparent transparent #fff;
+}
+.reel__play[hidden] { display: none; }
+
+/* Title + caption */
+.reel__info {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  inset-inline: 0;
+  max-width: calc(100dvh * 9 / 16);
+  margin-inline: auto;
+  padding: 48px var(--gap) calc(var(--cta-h) + 2 * var(--gap) + var(--safe-b));
+  background: linear-gradient(transparent, rgba(0, 0, 0, .75));
+  pointer-events: none;
+}
+.reel__title {
+  margin: 0 0 4px;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.reel__title a {
+  pointer-events: auto;
+  text-decoration: none;
+}
+.reel__caption {
+  margin: 0;
+  font-size: 14px;
+  white-space: pre-line;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+}
+
+/* Single reel page: full caption, scrollable */
+.feed--single .reel__info {
+  max-height: 55%;
+  overflow-y: auto;
+  pointer-events: auto;
+}
+.feed--single .reel__caption {
+  display: block;
+  -webkit-line-clamp: unset;
+}
+
+/* Sound toggle */
+.reel__sound {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--safe-t) + 52px);
+  left: var(--gap);
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .5) no-repeat center / 22px;
+  /* speaker, muted */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H2v6h4l5 4z'/%3E%3Cpath d='m23 9-6 6M17 9l6 6'/%3E%3C/svg%3E");
+  cursor: pointer;
+}
+.reel__sound[aria-pressed="true"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H2v6h4l5 4z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14'/%3E%3C/svg%3E");
+}
+
+/* Sticky CTA */
+.cta {
+  position: fixed;
+  z-index: 4;
+  bottom: calc(var(--gap) + var(--safe-b));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 2 * var(--gap)), 420px);
+  height: var(--cta-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+}
+.cta:focus-visible,
+.reel__sound:focus-visible,
+.reel__title a:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* 404 */
+.page-404 { overflow: auto; }
+.notfound {
+  display: grid;
+  place-content: center;
+  min-height: 100dvh;
+  text-align: center;
+  padding: var(--gap);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reel__poster { transition: none; }
+}

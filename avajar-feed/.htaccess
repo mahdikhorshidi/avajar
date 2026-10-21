@@ -1,0 +1,39 @@
+# Root of the upload when the whole avajar-feed folder sits in the web root.
+# (If your host lets you point the document root at public/, do that instead;
+# these rules still apply as a second line of defence.)
+
+Options -Indexes
+DirectoryIndex index.php
+ServerSignature Off
+
+# Never serve the DB, config, schema, scripts or dotfiles.
+<FilesMatch "^(config\.php|config\.php\.example|schema\.sql|seed\.sql)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+<FilesMatch "(\.(sqlite|sqlite3|db|sql|sh|log|example)|^\..*)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Private directories.
+    RewriteRule ^(data|src|tools)(/|$) - [F,L]
+    RewriteRule ^config\.php - [F,L]
+
+    # Everything except admin/ is served from public/.
+    RewriteCond %{REQUEST_URI} !/public/
+    RewriteRule ^(?!admin(?:/|$)|public/)(.*)$ public/$1 [L]
+</IfModule>
